@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+<title>Page Title</title>
+
+<!--
+<script src="jquery/jquery-3.2.1.min.js">
+</script>
+-->
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+<!-- Make images fit all screen sizes, supposedly.
+From https://stackoverflow.com/questions/20511028/screen-resolution-on-a-phonegap-app -->
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+
+
+
+<!-- <Style> -------------------------------------------------- -->
+
+<Style>
+
+	body {
+		font-family: Arial;
+		margin: 0px;
+	}
+
+	.pagecontent {
+		font-size: 36pt;
+		padding: 50px;
+	}
+
+	.topbanner {
+		background-image: url("img/blue_gradient.png");
+		background-repeat: repeat-x;
+		background-color: RGB(0,0,120);
+		text-align: center;
+		padding: 0px;
+	}
+
+	.linksbar {
+		background-image: url("img/gray_gradient.png");
+		background-repeat: repeat-x;
+		background-color: lightgray;
+		color: white;
+		font-size: 30pt;
+		font-weight: bold;
+		text-align: center;
+		vertical-align: 50%;
+		height: 60px;
+		line-height: 60px;
+		white-space: nowrap;
+	}
+
+	.linkspacer {
+		padding-left: 60px;
+	}
+
+	.linkpage_social_start, .linkpage_faq_start, .linkpage_tip_start, .linkpage_about_start {
+		border: 5px solid black;
+		width: 1px;
+		min-height: 1px;
+		max-height: 1px;
+		top: 15vh;
+		position: absolute;
+		background-color: white;
+		opacity: 1;
+		z-index: 100;
+		transition: all 0.2s;
+		transform: translate(-50%,-50%) scale(0);
+	}
+	.linkpage_social_start {left: 20vw;}
+	.linkpage_faq_start {left: 40vw;}
+	.linkpage_tip_start {left: 60vw;}
+	.linkpage_about_start {left: 80vw;}
+
+	.linkpage_full {
+		border: 5px solid black;
+		width: 95vw;
+		min-height: 96vh;
+		max-height: 96vh;
+		left: 2vw;
+		top: 2vh;
+		position: absolute;
+		background-color: white;
+		opacity: 1;
+		z-index: 100;
+		transform: translate(0%,0%) scale(1);
+		overflow-y: scroll;
+	}
+
+	.closebutton_social, .closebutton_faq, .closebutton_tip, .closebutton_about {
+		text-align: right;
+	}
+
+</style>
+
+
+
+<!-- <script> -------------------------------------------------- -->
+
+<script>
+
+	$(document).ready(function(){
+		/*
+		// This is the jQuery example from W3Schools
+		$("p").click(function(){
+			$(this).hide();
+		});
+		*/
+	});
+
+</script>
+
+
+</head>
+
+
+
+<!-- <body> -------------------------------------------------- -->
+
+<body>
+
+<!-- Header -->
+<div class="topbanner">
+	<img src="img/temp_banner.png">
+</div>
+
+<!-- Gray navigation links bar -->
+<div class="linksbar">
+	<span id="link_social">SOCIAL</span>
+		<span class="linkspacer"></span>
+	<span id="link_faq">FAQ</span>
+		<span class="linkspacer"></span>
+	<span id="link_tip">TIP</span>
+		<span class="linkspacer"></span>
+	<span id="link_about">ABOUT</span>
+</div>
+
+
+
+<!-- Script --------------------------------------------------- -->
+<script>
+	// When the user taps on a link, display the corresponding page
+	$( "#link_social" ).click(function() {
+		$(".linkpage_social_start" ).toggleClass( "linkpage_full" );
+	});
+
+	$( "#link_tip" ).click(function() {
+		$(".linkpage_tip_start" ).toggleClass( "linkpage_full" );
+	});
+
+	$( "#link_faq" ).click(function() {
+		$(".linkpage_faq_start" ).toggleClass( "linkpage_full" );
+	});
+
+	$( "#link_about" ).click(function() {
+		$(".linkpage_about_start" ).toggleClass( "linkpage_full" );
+	});
+
+</script>
+
+
+
+<!-- Selection page content --------------------------------- -->
+<div class="pagecontent">
+
+	<p>You should order a drink!</p>
+	
+	<p>I'll show a link for that soon</p>
+
+</div>
+
+
+
+<!-- Hidden "links" pages ------------------------------------>
+
+<!-- SOCIAL page -->
+<div id="page_social" class="linkpage_social_start">
+	<div class="pagecontent" >
+
+		<div class="closebutton_social">X</div>
+
+		Share all over social media, please!
+
+	</div>
+</div>
+
+<!-- TIPS page -->
+<div id="page_tips" class="linkpage_tip_start">
+	<div class="pagecontent" >
+
+		<div class="closebutton_tip">X</div>
+
+		Gimme a tip, please!
+
+	</div>
+</div>
+
+<!-- FAQ page -->
+<div id="page_faq" class="linkpage_faq_start">
+	<div class="pagecontent" >
+
+		<div class="closebutton_faq">X</div>
+
+		You got questions? I got answers!  (This is the "FAQ" page.)
+
+	</div>
+</div>
+
+<!-- ABOUT page -->
+<div id="page_about" class="linkpage_about_start">
+	<div class="pagecontent" >
+
+		<div class="closebutton_about">X</div>
+
+		Hey, I'm Brett, and this is the "about" page!
+
+	</div>
+</div>
+
+
+
+<!-- Script --------------------------------------------------- -->
+<Script>
+
+	// When the user clicks a "close" button on a links page, hide all displayed pages
+	$( ".closebutton_social" ).click(function() {
+		$(".linkpage_social_start" ).toggleClass( "linkpage_full" );
+	});
+
+	$( ".closebutton_tip" ).click(function() {
+		$(".linkpage_tip_start" ).toggleClass( "linkpage_full" );
+	});
+
+	$( ".closebutton_faq" ).click(function() {
+		$(".linkpage_faq_start" ).toggleClass( "linkpage_full" );
+	});
+
+	$( ".closebutton_about" ).click(function() {
+		$(".linkpage_about_start" ).toggleClass( "linkpage_full" );
+	});
+</Script>
+
+
+
+<!-- end of the <body> -------------------------------------- -->
+
+</body>
+
+</html>
