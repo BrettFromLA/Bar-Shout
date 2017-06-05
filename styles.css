@@ -3,23 +3,27 @@ body {
     margin: 0px;
 }
 
-.pagecontent {
-    font-size: 5vw;
-    padding: 50px;
+.topbanner {
+    background-image: url("img/gradient v1.png");
+    background-repeat: repeat-x;
+    text-align: center;
+    background-size: 1vw 24.584vw;
+    background-repeat: repeat-x;
+    padding: 0px;
+    background-color: RGB(0,0,150);
 }
 
-.topbanner {
-    background-image: url("img/blue_gradient.png");
-    background-repeat: repeat-x;
-    background-color: RGB(0,0,120);
-    text-align: center;
-    padding: 0px;
+.resizebanner {
+    width: 70vw;
+    height: 15.584vw;
+    padding: 4vw;
 }
 
 .linksbar {
     background-image: url("img/gray_gradient.png");
+    background-size: 1vw 9.5vw;
     background-repeat: repeat-x;
-    background-color: lightgray;
+    /* background-color: #CCCCCC; */
     text-align: center;
 }
 
@@ -36,25 +40,8 @@ body {
     display: inline-block;
 }
 
-.linkpage_social_start, .linkpage_faq_start, .linkpage_tip_start, .linkpage_about_start {
-    border: 5px solid black;
-    width: 1px;
-    min-height: 1px;
-    max-height: 1px;
-    top: 32.7vw;
-    position: absolute;
-    background-color: white;
-    opacity: 1;
-    z-index: 100;
-    transition: all 0.2s;
-    transform: translate(-50%,-50%) scale(0);
-}
-.linkpage_social_start {left: 25vw;}
-.linkpage_faq_start {left: 44vw;}
-.linkpage_tip_start {left: 58vw;}
-.linkpage_about_start {left: 77vw;}
 
-.linkpage_full {
+.popover {
     border: 5px solid black;
     width: 95vw;
     min-height: 96vh;
@@ -69,11 +56,12 @@ body {
     overflow-y: scroll;
 }
 
-.closebutton_social, .closebutton_faq, .closebutton_tip, .closebutton_about {
-    text-align: right;
-}
-
-.resize {
-    width: 100vw;
+.page {
+	position: absolute;
+	height: 70vh;
+	width: 84vw;
+    font-size: 5vw;
+    padding: 8vw;
+    display: block;
 }
 

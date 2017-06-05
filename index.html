@@ -5,34 +5,37 @@
 <head>
 <title>Page Title</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<!--
+<link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.css">
+<script src="jquery.mobile-1.4.5/jquery.js"></script>
+<script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 <script src="jquery/jquery-3.2.1.min.js"></script>
+-->
+
+
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<!--
+-->
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+
+
+
+
 <link rel="stylesheet" href="styles.css">
 
 
 
-<!-- Make images fit all screen sizes, supposedly.
-From https://stackoverflow.com/questions/20511028/screen-resolution-on-a-phonegap-app 
-<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
--->
-
-
-
-<!-- 
-add this thingy 
-https://stackoverflow.com/questions/28848132/phonegap-how-control-the-font-size-of-the-mobile
-
-and maybe this too
-https://stackoverflow.com/questions/19456183/scaling-a-phonegap-app-for-different-android-screen-sizes-densities
--->
-
-
-
-
-
-
-<!-- <script> -------------------------------------------------- -->
+<!-- Script -------------------------------------------------- -->
 
 <script>
+
+	var aPage = ["page_order", "page_social", "page_tip", "page_about", "page_reportbug", "page_faq", "page_contact"];
 
 	$(document).ready(function(){
 		/*
@@ -41,7 +44,174 @@ https://stackoverflow.com/questions/19456183/scaling-a-phonegap-app-for-differen
 			$(this).hide();
 		});
 		*/
+
+		// Bind the callback functions to the swipe events on the whole document (app)
+		$("body").on("swipeleft", doSwipeLeft);
+		$("body").on("swiperight", doSwipeRight);
+
+		// Create the click functions for all the navigation buttons
+		$("#link_order").click(function(){
+			doPageChange(outLeftOrRight(0), 0);
+		});
+		$("#link_social").click(function(){
+			doPageChange(outLeftOrRight(1), 1);
+		});
+		$("#link_tip").click(function(){
+			doPageChange(outLeftOrRight(2), 2);
+		});
+		$("#link_more").click(function(){
+			doPageChange(outLeftOrRight(3), 3);
+		});
+
 	});
+
+
+	function doSwipeLeft() {
+		 doPageChange("left", outNextPage("left"))
+	}
+
+
+	function doSwipeRight() {
+		 doPageChange("right", outNextPage("right"))
+	}
+
+
+	// When a user taps a link, should it animate left or right?
+	function outLeftOrRight(goto_page) {
+
+		// Grab the page name
+		var sCurrent = $("#current_page").val();
+
+		// Set default values for the current page number
+		iCurrentPage = -1;
+
+		// Loop through the global array to find the index numbers for the current page
+		var iLength = aPage.length;
+		for (var i = 0; i < iLength; i++) {
+			if (aPage[i] == sCurrent) {
+
+				// If the new page is the the right of the current page, return "left"
+				if (goto_page > i) {
+					return ("left");
+				}
+				
+				// If the new page is the the left of the current page, return "right"
+				if (goto_page < i) {
+					return ("right");
+				}
+
+				// If the user tapped the link for the current page, return "same"
+				if (goto_page == iCurrentPage) {
+					return ("same");
+				}
+			}
+		}
+	}
+
+
+	function outNextPage(left_or_right) {
+
+		// grab the current page’s name from the <input>
+		var sCurrent = $("#current_page").val();
+
+		// loop through the global array to find the page’s index number
+		var iCurrent = -1;	// Default value, showing it wasn't found
+		var iLength = aPage.length;
+		for (var i = 0; i < iLength; i++) {
+			if (aPage[i] == sCurrent) {
+				iCurrent = i;
+			}
+		}
+
+		// BAIL OUT if index not found
+		if (iCurrent == -1) {
+			return -1;
+		}
+
+		// Add or subtract 1, based on the type of swipe
+		var iNextPage = -1;
+		if (left_or_right == "left") {
+			iNextPage = iCurrent + 1;
+		} else {
+			iNextPage = iCurrent - 1;
+		}
+
+		// BAIL OUT if iNextPage is outside the range of pages
+		if ((iNextPage < 0) || (iNextPage > iLength)) {
+			return -1;
+		}
+
+		// The iNextPage index number is legitimate, so return it
+		return iNextPage;
+	}
+
+
+	function doPageChange(left_or_right, goto_page) {
+
+		// BAIL OUT if "left_or_right" doesn't have a valid value
+		if ((left_or_right != "left") && (left_or_right != "right")) {
+			return;
+		}
+
+		// BAIL OUT if "goto_page" doesn't have a valid value
+		if ((goto_page < 0) || (goto_page > aPage.length)) {
+			return;
+		}
+
+		// Get the page name associated with the number in goto_page
+		var sGotoPage = aPage[goto_page];
+
+		// Get the current page, too
+		var sCurrentPage = $("#current_page").val();
+
+		// Swipe left
+		if (left_or_right == "left") {
+
+			// Position goto_page off to the right of the viewport
+			$("#" + sGotoPage).css("display", "block").css("left","100vw");
+
+			// Animate current page to "off_right", and goto_page to "page"
+			$("#" + sCurrentPage).animate
+			(
+				{left: "-100vw"}, { duration: 200, queue: false }
+			);
+			$("#" + sGotoPage).animate
+			(
+				{left: "0px"},  { duration: 200, queue: false }
+			);
+
+			// simultaneously animate the underline to the right place, too
+	
+		}
+		
+		// Swipe right
+		if (left_or_right == "right") {
+
+			// Position goto_page off to the left of the viewport
+			$("#" + sGotoPage).css("display", "block").css("left","-100vw");
+
+			// Animate current page to "off_right", and goto_page to "page"
+			$("#" + sCurrentPage).animate
+			(
+				{left: "100vw"}, { duration: 200, queue: false }
+			);
+			$("#" + sGotoPage).animate
+			(
+				{left: "0px"},  { duration: 200, queue: false }
+			);
+
+						
+			// Simultaneously animate the underline to the right place, too
+
+		}
+
+		// set current_page CSS to “display: none”
+//		$("#" + sCurrentPage).css("display", "none”");
+		
+		// Store sGotoPage as the new current page, in the <input type="hidden>
+		var sCurrentPage = $("#current_page").val(sGotoPage);
+		
+	}
 
 </script>
 
@@ -50,128 +220,76 @@ https://stackoverflow.com/questions/19456183/scaling-a-phonegap-app-for-differen
 
 
 
-<!-- <body> -------------------------------------------------- -->
+
+<!-- <body> -------------------------------------------------------------------------------------------------- -->
+<!-- --------------------------------------------------------------------------------------------------------- -->
+<!-- --------------------------------------------------------------------------------------------------------- -->
+
+
+
 
 <body>
 
 <!-- Header -->
 <div class="topbanner">
-	<!-- <img src="img/temp_banner.png"> -->
-	<img class="resize" src="img/temp_banner.png">
+	<img class="resizebanner" src="img/BAR SHOUT_logo_4.png">
 </div>
-
 
 <!-- Gray navigation links bar -->
 <div class="linksbar">
+	<span class="link" id="link_order">ORDER</span>
 	<span class="link" id="link_social">SOCIAL</span>
-	<span class="link" id="link_faq">FAQ</span>
 	<span class="link" id="link_tip">TIP</span>
-	<span class="link" id="link_about">ABOUT</span>
+	<span class="link" id="link_more">MORE</span>
 </div>
 
+<!-- What page is showing now? -->
+<input type="hidden" id="current_page" value="page_order">
 
-<!-- Script --------------------------------------------------- -->
-<script>
-	// When the user taps on a link, display the corresponding page
-	$( "#link_social" ).click(function() {
-		$(".linkpage_social_start" ).toggleClass( "linkpage_full" );
-	});
-
-	$( "#link_tip" ).click(function() {
-		$(".linkpage_tip_start" ).toggleClass( "linkpage_full" );
-	});
-
-	$( "#link_faq" ).click(function() {
-		$(".linkpage_faq_start" ).toggleClass( "linkpage_full" );
-	});
-
-	$( "#link_about" ).click(function() {
-		$(".linkpage_about_start" ).toggleClass( "linkpage_full" );
-	});
-
-</script>
-
-
-
-<!-- Selection page content --------------------------------- -->
-<div class="pagecontent">
-
+<!-- ORDER page -->
+<div id="page_order" class="page">
 	<p>You should order a drink!</p>
 	
-	<p>I'll show a link for that soon</p>
+	<p>I'll show a link for that soon.</p>
 
+	<p>
+		Looks like it's scrolling the whole page.  I'll need to figure that out!
+		There's probably something in jQuery Mobile to handle that.
+	</p>
+
+	<p>
+		I can probably make a div with a percentage of the height of the page, or maybe
+		with the height minus a few things (instead of doing a percentage).
+	</p>
+
+	<p>
+		~~~
+	</p>
+
+	<p style="font-size: 3pt;">
+		For some reason, the Visual Studio Code windo keeps trying to 
+		make whatever I type into a keyword.  It's REALLY irritating. Like, dude, this is just text. 
+		And you're popping up all these things that stop me from being able to type really quickly. 
+		Plus, there's something about an extra apostrophe always showing up at the end.  I'm not sure
+		where THAT comes from. It's trying to add that like it thinks I need to "close" a parenthesis.
+		Hmph!  lol
+	</p>
 </div>
 
-
-
-<!-- Hidden "links" pages ------------------------------------>
+<!-- TIP page -->
+<div id="page_tip" class="page" style="display: none; left: 100vw;">
+	Gimme a tip, please!
+</div>
 
 <!-- SOCIAL page -->
-<div id="page_social" class="linkpage_social_start">
-	<div class="pagecontent" >
-
-		<div class="closebutton_social">X</div>
-
-		Share all over social media, please!
-
-	</div>
+<div id="page_social" class="page" style="display: none; left: 100vw;">
+	Share all over social media, please!
 </div>
 
-<!-- TIPS page -->
-<div id="page_tips" class="linkpage_tip_start">
-	<div class="pagecontent" >
-
-		<div class="closebutton_tip">X</div>
-
-		Gimme a tip, please!
-
-	</div>
+<!-- MORE page -->
+<div id="page_more" class="page" style="display: none; left: 100vw;">
+	Hey, I'm Brett, and this is the "More" page!
 </div>
-
-<!-- FAQ page -->
-<div id="page_faq" class="linkpage_faq_start">
-	<div class="pagecontent" >
-
-		<div class="closebutton_faq">X</div>
-
-		You got questions? I got answers!  (This is the "FAQ" page.)
-
-	</div>
-</div>
-
-<!-- ABOUT page -->
-<div id="page_about" class="linkpage_about_start">
-	<div class="pagecontent" >
-
-		<div class="closebutton_about">X</div>
-
-		Hey, I'm Brett, and this is the "about" page!
-
-	</div>
-</div>
-
-
-
-<!-- Script --------------------------------------------------- -->
-<script>
-
-	// When the user clicks a "close" button on a links page, hide all displayed pages
-	$( ".closebutton_social" ).click(function() {
-		$(".linkpage_social_start" ).toggleClass( "linkpage_full" );
-	});
-
-	$( ".closebutton_tip" ).click(function() {
-		$(".linkpage_tip_start" ).toggleClass( "linkpage_full" );
-	});
-
-	$( ".closebutton_faq" ).click(function() {
-		$(".linkpage_faq_start" ).toggleClass( "linkpage_full" );
-	});
-
-	$( ".closebutton_about" ).click(function() {
-		$(".linkpage_about_start" ).toggleClass( "linkpage_full" );
-	});
-</script>
 
 
 
